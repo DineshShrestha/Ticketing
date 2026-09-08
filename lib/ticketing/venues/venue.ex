@@ -1,6 +1,6 @@
 defmodule Ticketing.Venues.Venue do
-  use Ecto.Schema
   import Ecto.Changeset
+  use Ecto.Schema
 
   schema "venues" do
     field :name, :string
@@ -10,7 +10,6 @@ defmodule Ticketing.Venues.Venue do
     timestamps(type: :utc_datetime)
   end
 
-  @doc false
   def changeset(venue, attrs) do
     venue
     |> cast(attrs, [:name, :address, :capacity])
