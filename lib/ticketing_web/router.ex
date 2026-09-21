@@ -10,6 +10,11 @@ defmodule TicketingWeb.Router do
     plug :put_secure_browser_headers
   end
 
+  pipeline :authenticated do
+    plug :accepts, ["json"]
+    plug TicketingWeb.Plugs.RequireUser
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -18,6 +23,20 @@ defmodule TicketingWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+  end
+
+  scope "/api", TicketingWeb do
+    pipe_through :api
+
+    resources "/events", EventController, only: [:index, :show]
+    # resources "/orders", EventController, only: [:create, :delete]
+    post "/sessions", SessionController, :create
+  end
+
+  scope "/api", TicketingWeb do
+    pipe_through :authenticated
+
+    resources "/orders", OrderController, only: [:create, :delete]
   end
 
   # Other scopes may use custom stacks.
